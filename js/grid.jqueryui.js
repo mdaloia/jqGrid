@@ -3,12 +3,12 @@
 (function($){
 /*
 **
- * jqGrid addons using jQuery UI 
+ * jqGrid addons using jQuery UI
  * Author: Mark Williams
  * Dual licensed under the MIT and GPL licenses:
  * http://www.opensource.org/licenses/mit-license.php
  * http://www.gnu.org/licenses/gpl-2.0.html
- * depends on jQuery UI 
+ * depends on jQuery UI
 **/
 "use strict";
 if ($.jgrid.msie && $.jgrid.msiever()==8) {
@@ -50,7 +50,7 @@ if($.ui) {
 		$.jgrid._multiselect = true;
 	}
 }
-        
+
 $.jgrid.extend({
 	sortableColumns : function (tblrow)
 	{
@@ -87,7 +87,7 @@ $.jgrid.extend({
 								permutation.push(cmMap[id]);
 							}
 					});
-	
+
 					$(ts).jqGrid("remapColumns",permutation, true, true);
 					if ($.isFunction(ts.p.sortable.update)) {
 						ts.p.sortable.update(permutation);
@@ -120,7 +120,7 @@ $.jgrid.extend({
 		if($("#colchooser_"+$.jgrid.jqID(self[0].p.id)).length ) { return; }
         var selector = $('<div id="colchooser_'+self[0].p.id+'" style="position:relative;overflow:hidden"><div><select multiple="multiple"></select></div></div>');
         var select = $('select', selector);
-		
+
 		function insert(perm,i,v) {
 			if(i>=0){
 				var a = perm.slice();
@@ -143,7 +143,7 @@ $.jgrid.extend({
             "msel" : "multiselect",
             /* "msel_opts" : {}, */
 
-            /* dlog is either the name of a ui widget class that 
+            /* dlog is either the name of a ui widget class that
                behaves in a dialog-like way, or a function, that
                supports creating a dialog (when passed dlog_opts)
                or destroying a dialog (when passed the string
@@ -153,7 +153,7 @@ $.jgrid.extend({
 			"dialog_opts" : {
 				"minWidth": 470
 			},
-            /* dlog_opts is either an option object to be passed 
+            /* dlog_opts is either an option object to be passed
                to "dlog", or (more likely) a function that creates
                the options object.
                The default produces a suitable options object for
@@ -180,14 +180,23 @@ $.jgrid.extend({
             /* Function to get the permutation array, and pass it to the
                "done" function */
             "apply_perm" : function() {
+                var toShow = [];
+                var toHide = [];
+
                 $('option',select).each(function() {
                     if (this.selected) {
-                        self.jqGrid("showCol", colModel[this.value].name);
+                        toShow.push(colModel[this.value].name);
                     } else {
-                        self.jqGrid("hideCol", colModel[this.value].name);
+                        toHide.push(colModel[this.value].name);
                     }
                 });
-                
+
+                if(toShow.length > 0)
+                    self.jqGrid("showCol", toShow);
+
+                if(toHide.length > 0)
+                    self.jqGrid("hideCol", toHide);
+
                 var perm = [];
 				//fixedCols.slice(0);
                 $('option:selected',select).each(function() { perm.push(parseInt(this.value,10)); });
@@ -465,12 +474,12 @@ $.jgrid.extend({
 			"autoid" : true,
 			"autoidprefix" : "dnd_"
 		}, opts || {});
-		
+
 		if(!opts.connectWith) { return; }
 		opts.connectWith = opts.connectWith.split(",");
 		opts.connectWith = $.map(opts.connectWith,function(n){return $.trim(n);});
 		$.data($t,"dnd",opts);
-		
+
 		if($t.p.reccount != "0" && !$t.p.jqgdnd) {
 			updateDnD();
 		}
